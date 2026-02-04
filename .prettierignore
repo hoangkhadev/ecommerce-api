@@ -1,0 +1,16 @@
+# dependencies
+node_modules
+
+# build output
+dist
+build
+
+# env
+.env
+.env.*
+
+# system
+.git
+.vscode
+
+*.yaml
