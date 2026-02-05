@@ -3,11 +3,10 @@ import http from 'http'
 
 /**Custom modules */
 import app from '@/app'
-
-const PORT = 8000
+import { env } from '@/config/env'
 
 const server = http.createServer(app)
 
-server.listen(PORT, () => {
-  console.log('Server running on port: ' + PORT)
+server.listen(env.PORT, () => {
+  console.log('Server running on port: ' + env.PORT)
 })
