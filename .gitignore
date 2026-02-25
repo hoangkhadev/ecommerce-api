@@ -11,3 +11,4 @@ dist
 
 # system
 .vscode
+/generated/prisma

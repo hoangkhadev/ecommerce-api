@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier -c .",
-    "format:fix": "prettier -w ."
+    "format:fix": "prettier -w .",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:reset": "prisma migrate reset",
+    "generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +29,7 @@
     "globals": "^17.3.0",
     "nodemon": "^3.1.11",
     "prettier": "^3.8.1",
+    "prisma": "^7.4.1",
     "rimraf": "^6.1.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
@@ -33,9 +37,13 @@
     "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.1",
+    "@prisma/client": "^7.4.1",
     "@types/express": "^5.0.6",
+    "@types/pg": "^8.16.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
   }
 }

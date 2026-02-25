@@ -6,5 +6,6 @@ export const env = {
     'http://localhost:5173',
     'http://localhost:3000',
     process.env.CLIENT_URL
-  ]
+  ],
+  DATABASE_URL: process.env.DATABASE_URL
 }
