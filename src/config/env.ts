@@ -1,5 +1,10 @@
 import 'dotenv/config'
 
 export const env = {
-  PORT: process.env.PORT || 8000
+  PORT: process.env.PORT || 8000,
+  WHITELIST_ORIGINS: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL
+  ]
 }

@@ -1,8 +1,26 @@
 /**Node modules */
 import express from 'express'
+import cors from 'cors'
+
+/**Custom modules */
+import { env } from '@/config/env'
+
+/**Types */
+import type { CorsOptions } from 'cors'
 
 const app = express()
 
+const corsOptions: CorsOptions = {
+  origin(requestOrigin, callback) {
+    if (!requestOrigin) return callback(null, true)
+    if (env.WHITELIST_ORIGINS.includes(requestOrigin))
+      return callback(null, true)
+
+    return callback(new Error('Not allowed by CORS'), false)
+  }
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
