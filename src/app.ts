@@ -5,6 +5,9 @@ import cors from 'cors'
 /**Custom modules */
 import { env } from '@/config/env'
 
+/**Middlewares */
+import { errorMiddleware } from '@/middlewares/error.middleware'
+
 /**Types */
 import type { CorsOptions } from 'cors'
 
@@ -37,5 +40,8 @@ app.get('/api', (_req, res) => {
     version: '1.0.0'
   })
 })
+
+/**Error handler */
+app.use(errorMiddleware)
 
 export default app
