@@ -6,7 +6,8 @@ import { env } from '@/config/env'
 import type { Request, Response, NextFunction } from 'express'
 
 export const errorMiddleware = (
-  err: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  err: any,
   _req: Request,
   res: Response,
   _next: NextFunction

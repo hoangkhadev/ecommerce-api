@@ -8,8 +8,8 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default defineConfig([
   globalIgnores(['node_modules', 'dist']),
-  tseslint.configs.recommended,
   js.configs.recommended,
+  tseslint.configs.recommended,
   eslintConfigPrettier,
   {
     files: ['**/*.{js,mjs,cjs,ts}'],
