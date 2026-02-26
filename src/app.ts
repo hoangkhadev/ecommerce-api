@@ -8,6 +8,9 @@ import { env } from '@/config/env'
 /**Middlewares */
 import { errorMiddleware } from '@/middlewares/error.middleware'
 
+/**App routes */
+import { v1Routes } from '@/routes/v1'
+
 /**Types */
 import type { CorsOptions } from 'cors'
 
@@ -40,6 +43,9 @@ app.get('/api', (_req, res) => {
     version: '1.0.0'
   })
 })
+
+/**Api routes */
+app.use('/api/v1', v1Routes)
 
 /**Error handler */
 app.use(errorMiddleware)
