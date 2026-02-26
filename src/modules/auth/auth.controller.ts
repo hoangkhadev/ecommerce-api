@@ -3,12 +3,14 @@ import { StatusCodes } from 'http-status-codes'
 
 /**Custom modules */
 import { success } from '@/utils/response'
+import { env } from '@/config/env'
 
 /**Services */
 import { authService } from '@/modules/auth/auth.service'
 
 /**Types */
 import type { NextFunction, Request, Response } from 'express'
+import type { T_LoginInput } from '@/modules/auth/auth.schema'
 
 export const authController = {
   register: async (req: Request, res: Response, next: NextFunction) => {
@@ -17,6 +19,28 @@ export const authController = {
       return success(res, { statusCode: StatusCodes.CREATED, data: user })
     } catch (error) {
       console.error('Error register: ', error)
+      next(error)
+    }
+  },
+  login: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, password } = req.body as T_LoginInput
+      const { accessToken, refreshToken } = await authService.login(
+        email,
+        password
+      )
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'producttion',
+        sameSite: 'strict'
+      })
+
+      return success(res, {
+        message: 'Login successfully',
+        data: { accessToken }
+      })
+    } catch (error) {
+      console.error('Error login: ', error)
       next(error)
     }
   }

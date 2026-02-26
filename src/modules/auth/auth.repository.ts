@@ -13,5 +13,12 @@ export const authRepository = {
   },
   create: async (data: T_RegisterInput) => {
     return prisma.user.create({ data })
+  },
+  createRefreshToken: async (
+    userId: number,
+    token: string,
+    expiredAt: Date
+  ) => {
+    return prisma.refreshToken.create({ data: { userId, token, expiredAt } })
   }
 }
