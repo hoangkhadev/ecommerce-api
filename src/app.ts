@@ -1,12 +1,16 @@
 /**Node modules */
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 /**Custom modules */
 import { env } from '@/config/env'
 
 /**Middlewares */
 import { errorMiddleware } from '@/middlewares/error.middleware'
+
+/**App routes */
+import { v1Routes } from '@/routes/v1'
 
 /**Types */
 import type { CorsOptions } from 'cors'
@@ -26,6 +30,7 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.get('/health', (_req, res) => {
   res.json({
@@ -40,6 +45,9 @@ app.get('/api', (_req, res) => {
     version: '1.0.0'
   })
 })
+
+/**Api routes */
+app.use('/api/v1', v1Routes)
 
 /**Error handler */
 app.use(errorMiddleware)
