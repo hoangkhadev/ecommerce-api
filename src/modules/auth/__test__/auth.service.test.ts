@@ -1,9 +1,13 @@
 /**Node modules */
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 
 /**Custom modules */
-import { env } from '@/config/env'
+import { hashToken } from '@/utils/hash'
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken
+} from '@/lib/jwt'
 
 /**Services */
 import { authService } from '@/modules/auth/auth.service'
@@ -16,11 +20,14 @@ jest.mock('@/modules/auth/auth.repository', () => ({
     findByEmail: jest.fn(),
     findByPhone: jest.fn(),
     create: jest.fn(),
-    createRefreshToken: jest.fn()
+    createRefreshToken: jest.fn(),
+    findRefreshToken: jest.fn(),
+    replaceRefreshToken: jest.fn()
   }
 }))
 jest.mock('bcryptjs')
-jest.mock('jsonwebtoken')
+jest.mock('@/utils/hash')
+jest.mock('@/lib/jwt')
 
 describe('AuthService', () => {
   describe('Register', () => {
@@ -108,33 +115,28 @@ describe('AuthService', () => {
         role: 'USER'
       })
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
-      ;(jwt.sign as jest.Mock)
-        .mockReturnValueOnce('accessToken')
-        .mockReturnValueOnce('refreshToken')
-      ;(authRepository.createRefreshToken as jest.Mock).mockResolvedValue({})
+      ;(generateAccessToken as jest.Mock).mockReturnValue('accessToken')
+      ;(generateRefreshToken as jest.Mock).mockReturnValue('refreshToken')
+      ;(hashToken as jest.Mock).mockReturnValue('refreshTokenHashed')
+      ;(authRepository.createRefreshToken as jest.Mock).mockResolvedValue({
+        id: 1,
+        token: 'refreshTokenHashed'
+      })
 
       const result = await authService.login('test@gmail.com', '12345678')
 
       expect(authRepository.findByEmail).toHaveBeenCalledWith('test@gmail.com')
       expect(bcrypt.compare).toHaveBeenCalledWith('12345678', 'hashedPassword')
 
-      expect(jwt.sign).toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({ sub: 1, role: 'USER' }),
-        env.JWT_ACCESS_SECRET,
-        expect.objectContaining({ expiresIn: expect.any(Number) })
-      )
-
-      expect(jwt.sign).toHaveBeenNthCalledWith(
-        2,
-        expect.objectContaining({ sub: 1, role: 'USER' }),
-        env.JWT_REFRESH_SECRET,
-        expect.objectContaining({ expiresIn: expect.any(Number) })
-      )
+      expect(generateAccessToken).toHaveBeenCalledWith({ sub: 1, role: 'USER' })
+      expect(generateRefreshToken).toHaveBeenCalledWith({
+        sub: 1,
+        role: 'USER'
+      })
+      expect(hashToken).toHaveBeenCalledWith('refreshToken')
       expect(authRepository.createRefreshToken).toHaveBeenCalledWith(
-        expect.any(Number),
-        expect.any(String),
-        expect.any(Date)
+        1,
+        'refreshTokenHashed'
       )
 
       expect(result.accessToken).toBe('accessToken')
@@ -166,6 +168,48 @@ describe('AuthService', () => {
           message: 'Invalid Credentials'
         })
       )
+    })
+  })
+
+  describe('Refresh token', () => {
+    it('Should return new tokens', async () => {
+      ;(verifyRefreshToken as jest.Mock).mockReturnValue({ sub: 1 })
+      ;(authRepository.findRefreshToken as jest.Mock).mockReturnValue({ id: 1 })
+      ;(generateAccessToken as jest.Mock).mockReturnValue('newAccessToken')
+      ;(generateRefreshToken as jest.Mock).mockReturnValue('newRefreshToken')
+      ;(hashToken as jest.Mock).mockReturnValue('newRefreshTokenHashed')
+
+      const result = await authService.refreshToken('refreshToken')
+
+      expect(authRepository.replaceRefreshToken).toHaveBeenCalledWith(
+        1,
+        'newRefreshTokenHashed'
+      )
+      expect(result).toEqual({
+        accessToken: 'newAccessToken',
+        refreshToken: 'newRefreshToken'
+      })
+    })
+
+    it('Should throw if refresh token not found', async () => {
+      ;(verifyRefreshToken as jest.Mock).mockReturnValue({
+        sub: 1
+      })
+      ;(authRepository.findRefreshToken as jest.Mock).mockResolvedValue(null)
+
+      await expect(authService.refreshToken('token')).rejects.toThrow(
+        expect.objectContaining({ message: 'Invalid refresh token' })
+      )
+    })
+
+    it('Should throw if token invalid', async () => {
+      ;(verifyRefreshToken as jest.Mock).mockImplementation(() => {
+        throw new Error()
+      })
+
+      await expect(
+        authService.refreshToken('invalidRefreshToken')
+      ).rejects.toThrow()
     })
   })
 })
