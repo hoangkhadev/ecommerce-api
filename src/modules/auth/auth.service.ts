@@ -3,8 +3,12 @@ import bcrypt from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
 
 /**Custom modules */
-import { env } from '@/config/env'
-import { generateAccessToken, generateRefreshToken } from '@/lib/jwt'
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken
+} from '@/lib/jwt'
+import { hashToken } from '@/utils/hash'
 
 /**Api Error */
 import { AppError } from '@/errors/AppError'
@@ -66,15 +70,36 @@ export const authService = {
     const accessToken = generateAccessToken(payload)
     const refreshToken = generateRefreshToken(payload)
 
-    const salt = await bcrypt.genSalt(10)
-    const refreshTokenHash = await bcrypt.hash(refreshToken, salt)
+    const refreshTokenHash = hashToken(refreshToken)
 
-    await authRepository.createRefreshToken(
-      user.id,
-      refreshTokenHash,
-      new Date(Date.now() + env.JWT_REFRESH_EXPIRED * 1000)
-    )
+    await authRepository.createRefreshToken(user.id, refreshTokenHash)
 
     return { accessToken, refreshToken }
+  },
+  refreshToken: async (
+    refreshToken: string
+  ): Promise<{ accessToken: string; refreshToken: string }> => {
+    const payload = verifyRefreshToken(refreshToken) as T_JwtPayload
+
+    const refreshTokenHash = hashToken(refreshToken)
+
+    const savedToken = await authRepository.findRefreshToken(refreshTokenHash)
+    if (!savedToken) {
+      throw new AppError('Invalid refresh token', StatusCodes.UNAUTHORIZED)
+    }
+
+    const accessToken = generateAccessToken({
+      sub: payload.sub,
+      role: payload.role
+    })
+    const newRefreshToken = generateRefreshToken({
+      sub: payload.sub,
+      role: payload.role
+    })
+
+    const newRefreshTokenHash = hashToken(newRefreshToken)
+    await authRepository.replaceRefreshToken(savedToken.id, newRefreshTokenHash)
+
+    return { accessToken, refreshToken: newRefreshToken }
   }
 }

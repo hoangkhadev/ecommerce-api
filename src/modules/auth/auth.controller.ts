@@ -43,5 +43,24 @@ export const authController = {
       console.error('Error login: ', error)
       next(error)
     }
+  },
+  refreshToken: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const tokens = await authService.refreshToken(req.refreshToken!)
+
+      res.cookie('refreshToken', tokens.refreshToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      })
+
+      return success(res, {
+        message: 'Refresh token success',
+        data: { accessToken: tokens.accessToken }
+      })
+    } catch (error) {
+      console.error('Error refresh token: ', error)
+      next(error)
+    }
   }
 }

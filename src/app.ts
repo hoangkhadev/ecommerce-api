@@ -1,6 +1,7 @@
 /**Node modules */
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 /**Custom modules */
 import { env } from '@/config/env'
@@ -29,6 +30,7 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.get('/health', (_req, res) => {
   res.json({
