@@ -35,5 +35,8 @@ export const authRepository = {
         expiredAt: new Date(Date.now() + env.JWT_REFRESH_EXPIRED * 1000)
       }
     })
+  },
+  deleteRefreshToken: async (refreshToken: string) => {
+    return prisma.refreshToken.deleteMany({ where: { token: refreshToken } })
   }
 }

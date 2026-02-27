@@ -36,3 +36,17 @@ export const verifyRefreshToken = (refreshToken: string) => {
     throw error
   }
 }
+
+export const verifyAcessToken = (accessToken: string) => {
+  try {
+    return jwt.verify(accessToken, env.JWT_ACCESS_SECRET!)
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new AppError('Access token expired', StatusCodes.UNAUTHORIZED)
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new AppError('Invalid access token', StatusCodes.UNAUTHORIZED)
+    }
+    throw error
+  }
+}

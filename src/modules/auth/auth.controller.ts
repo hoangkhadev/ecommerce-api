@@ -62,5 +62,19 @@ export const authController = {
       console.error('Error refresh token: ', error)
       next(error)
     }
+  },
+  logout: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await authService.logout(req.refreshToken!)
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      })
+      return success(res, { message: 'Logout successfully' })
+    } catch (error) {
+      console.error('Error logout: ', error)
+      next(error)
+    }
   }
 }

@@ -79,8 +79,7 @@ export const authService = {
   refreshToken: async (
     refreshToken: string
   ): Promise<{ accessToken: string; refreshToken: string }> => {
-    const payload = verifyRefreshToken(refreshToken) as T_JwtPayload
-
+    const user = verifyRefreshToken(refreshToken) as T_JwtPayload
     const refreshTokenHash = hashToken(refreshToken)
 
     const savedToken = await authRepository.findRefreshToken(refreshTokenHash)
@@ -89,17 +88,21 @@ export const authService = {
     }
 
     const accessToken = generateAccessToken({
-      sub: payload.sub,
-      role: payload.role
+      sub: user.sub,
+      role: user.role
     })
     const newRefreshToken = generateRefreshToken({
-      sub: payload.sub,
-      role: payload.role
+      sub: user.sub,
+      role: user.role
     })
 
     const newRefreshTokenHash = hashToken(newRefreshToken)
     await authRepository.replaceRefreshToken(savedToken.id, newRefreshTokenHash)
 
     return { accessToken, refreshToken: newRefreshToken }
+  },
+  logout: async (refreshToken: string) => {
+    const refreshTokenHash = hashToken(refreshToken)
+    await authRepository.deleteRefreshToken(refreshTokenHash)
   }
 }
