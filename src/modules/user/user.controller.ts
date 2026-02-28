@@ -19,5 +19,20 @@ export const userController = {
       console.error('Error get profile: ', error)
       next(error)
     }
+  },
+  updateProfile: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userUpdated = await userService.updateProfile(
+        req.user!.sub,
+        req.body
+      )
+      return success(res, {
+        message: 'Update current user success',
+        data: userUpdated
+      })
+    } catch (error) {
+      console.error('Error update profile: ', error)
+      next(error)
+    }
   }
 }
