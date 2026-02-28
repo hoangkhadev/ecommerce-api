@@ -7,7 +7,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default defineConfig([
-  globalIgnores(['node_modules', 'dist']),
+  globalIgnores(['node_modules', 'dist', 'generated']),
   js.configs.recommended,
   tseslint.configs.recommended,
   eslintConfigPrettier,
