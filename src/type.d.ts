@@ -2,7 +2,7 @@ declare namespace Express {
   interface Request {
     refreshToken?: string
     user?: {
-      sub: string | number
+      sub: number
       role: string
     }
   }

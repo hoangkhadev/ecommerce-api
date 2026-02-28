@@ -39,7 +39,10 @@ export const verifyRefreshToken = (refreshToken: string) => {
 
 export const verifyAcessToken = (accessToken: string) => {
   try {
-    return jwt.verify(accessToken, env.JWT_ACCESS_SECRET!)
+    return jwt.verify(
+      accessToken,
+      env.JWT_ACCESS_SECRET!
+    ) as unknown as T_JwtPayload
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new AppError('Access token expired', StatusCodes.UNAUTHORIZED)
