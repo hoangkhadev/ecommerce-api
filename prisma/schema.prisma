@@ -68,7 +68,8 @@ model RefreshToken {
 
 model Category {
   id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(60)
+  name      String    @db.VarChar(60)
+  slug      String    @unique @db.VarChar(80)
   parentId  Int?      @map("parent_id")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
