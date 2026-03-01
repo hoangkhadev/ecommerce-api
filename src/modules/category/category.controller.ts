@@ -32,5 +32,17 @@ export const categoryController = {
       }
       next(error)
     }
+  },
+  getAll: async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const categories = await categoryService.findAll()
+      return success(res, {
+        message: 'Get all categories success',
+        data: categories
+      })
+    } catch (error) {
+      console.error('Error get all categories: ', error)
+      next(error)
+    }
   }
 }

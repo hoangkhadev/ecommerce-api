@@ -11,5 +11,13 @@ export const categoryRepository = {
   },
   create: async (data: T_CreateCategoryInput & { slug: string }) => {
     return prisma.category.create({ data })
+  },
+  findAll: async () => {
+    return prisma.category.findMany({
+      where: { deletedAt: null },
+      orderBy: {
+        createdAt: 'asc'
+      }
+    })
   }
 }

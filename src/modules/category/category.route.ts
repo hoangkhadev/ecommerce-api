@@ -17,5 +17,6 @@ router.post(
   validate(createCategorySchema),
   categoryController.createCategory
 )
+router.get('/', categoryController.getAll)
 
 export { router as categoryRoutes }
