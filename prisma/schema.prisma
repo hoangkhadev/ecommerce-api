@@ -111,15 +111,29 @@ model ProductVariant {
   price     Decimal @db.Decimal(10, 2)
   stock     Int     @default(0)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
-  product    Product     @relation(fields: [productId], references: [id])
+  product    Product        @relation(fields: [productId], references: [id])
   cartItems  CartItem[]
   orderItems OrderItem[]
+  images     ProductImage[]
 
   @@index([productId])
   @@map("product_variants")
+}
+
+model ProductImage {
+  id               Int     @id @default(autoincrement())
+  imageUrl         String
+  productVariantId Int     @map("product_variant_id")
+  isPrimary        Boolean @default(false)
+
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+
+  @@index([productVariantId])
+  @@map("product_images")
 }
 
 model Cart {
