@@ -79,7 +79,6 @@ model Category {
   children Category[] @relation("CategoryToCategory")
   products Product[]
 
-  @@unique([name, parentId])
   @@index([deletedAt])
   @@index([parentId])
   @@map("categories")

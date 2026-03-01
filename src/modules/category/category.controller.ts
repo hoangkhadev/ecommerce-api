@@ -1,0 +1,36 @@
+/**Node modules */
+import { StatusCodes } from 'http-status-codes'
+
+/**Custom modules */
+import { success } from '@/utils/response'
+
+/**Services */
+import { categoryService } from '@/modules/category/category.service'
+
+/**Api error */
+import { AppError } from '@/errors/AppError'
+
+/**Types */
+import type { Request, Response, NextFunction } from 'express'
+import type { T_CreateCategoryInput } from '@/modules/category/category.schema'
+
+export const categoryController = {
+  createCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { name, parentId } = req.body as T_CreateCategoryInput
+      const category = await categoryService.createCategory(name, parentId)
+      return success(res, {
+        message: 'Create category success',
+        statusCode: StatusCodes.CREATED,
+        data: category
+      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error('Error create category: ', error)
+      if (error.code === 'P2002') {
+        throw new AppError('Category already exists', StatusCodes.CONFLICT)
+      }
+      next(error)
+    }
+  }
+}
