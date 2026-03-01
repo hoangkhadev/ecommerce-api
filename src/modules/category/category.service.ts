@@ -96,5 +96,20 @@ export const categoryService = {
       parentId,
       ...(slug && { slug })
     })
+  },
+  deleteCategory: async (id: number) => {
+    const category = await categoryRepository.findById(id)
+    if (!category) {
+      throw new AppError('Category not found', StatusCodes.NOT_FOUND)
+    }
+
+    const children = await categoryRepository.findChildren(id)
+    if (children.length > 0) {
+      throw new AppError(
+        'Cannot delete category with children',
+        StatusCodes.BAD_REQUEST
+      )
+    }
+    return categoryRepository.softDelete(id)
   }
 }

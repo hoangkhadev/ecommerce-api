@@ -29,5 +29,11 @@ router.patch(
   authorize(['ADMIN']),
   categoryController.updateCategory
 )
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['ADMIN']),
+  categoryController.deleteCategory
+)
 
 export { router as categoryRoutes }

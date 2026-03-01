@@ -64,5 +64,15 @@ export const categoryController = {
       console.error('Error update category: ', error)
       next(error)
     }
+  },
+  deleteCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      await categoryService.deleteCategory(id)
+      return success(res, { message: 'Delete category success' })
+    } catch (error) {
+      console.error('Error delete category: ', error)
+      next(error)
+    }
   }
 }

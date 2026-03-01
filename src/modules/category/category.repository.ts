@@ -38,5 +38,16 @@ export const categoryRepository = {
       data,
       include: { parent: true, children: { where: { deletedAt: null } } }
     })
+  },
+  findChildren: async (parentId: number) => {
+    return prisma.category.findMany({
+      where: { parentId, deletedAt: null }
+    })
+  },
+  softDelete: async (id: number) => {
+    return prisma.category.update({
+      where: { id },
+      data: { deletedAt: new Date() }
+    })
   }
 }
