@@ -18,5 +18,6 @@ router.post(
   categoryController.createCategory
 )
 router.get('/', categoryController.getAll)
+router.get('/:slug', categoryController.getBySlug)
 
 export { router as categoryRoutes }

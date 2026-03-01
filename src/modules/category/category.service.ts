@@ -56,5 +56,13 @@ export const categoryService = {
   findAll: async () => {
     const categories = await categoryRepository.findAll()
     return buildCategoryTree(categories)
+  },
+  getBySlug: async (slug: string) => {
+    const category = await categoryRepository.findBySlug(slug)
+    if (!category) {
+      throw new AppError('Category not found', StatusCodes.NOT_FOUND)
+    }
+
+    return category
   }
 }

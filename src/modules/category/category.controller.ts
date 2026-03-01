@@ -44,5 +44,15 @@ export const categoryController = {
       console.error('Error get all categories: ', error)
       next(error)
     }
+  },
+  getBySlug: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { slug } = req.params as { slug: string }
+      const data = await categoryService.getBySlug(slug)
+      return success(res, { message: 'Get category success', data })
+    } catch (error) {
+      console.error('Error get category by slug: ', error)
+      next(error)
+    }
   }
 }

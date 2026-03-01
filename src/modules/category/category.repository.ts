@@ -7,7 +7,13 @@ export const categoryRepository = {
     return prisma.category.findFirst({ where: { id, deletedAt: null } })
   },
   findBySlug: async (slug: string) => {
-    return prisma.category.findUnique({ where: { slug } })
+    return prisma.category.findUnique({
+      where: { slug, deletedAt: null },
+      include: {
+        parent: true,
+        children: { where: { deletedAt: null } }
+      }
+    })
   },
   create: async (data: T_CreateCategoryInput & { slug: string }) => {
     return prisma.category.create({ data })
