@@ -1,6 +1,9 @@
 /**Custom modules */
 import { prisma } from '@/lib/prisma'
-import { T_CreateCategoryInput } from '@/modules/category/category.schema'
+
+/**Types */
+import type { Category } from 'generated/prisma/client'
+import type { T_CreateCategoryInput } from '@/modules/category/category.schema'
 
 export const categoryRepository = {
   findById: async (id: number) => {
@@ -24,6 +27,16 @@ export const categoryRepository = {
       orderBy: {
         createdAt: 'asc'
       }
+    })
+  },
+  update: async (
+    id: number,
+    data: Pick<Category, 'name' | 'parentId'> & { slug?: string }
+  ) => {
+    return prisma.category.update({
+      where: { id },
+      data,
+      include: { parent: true, children: { where: { deletedAt: null } } }
     })
   }
 }

@@ -54,5 +54,15 @@ export const categoryController = {
       console.error('Error get category by slug: ', error)
       next(error)
     }
+  },
+  updateCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const data = await categoryService.updateCategory(id, req.body)
+      return success(res, { message: 'Update category success', data })
+    } catch (error) {
+      console.error('Error update category: ', error)
+      next(error)
+    }
   }
 }

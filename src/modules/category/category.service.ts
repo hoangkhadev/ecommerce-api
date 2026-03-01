@@ -34,6 +34,17 @@ function buildCategoryTree(categories: Category[]): CategoryNode[] {
   return roots
 }
 
+async function generateSlug(name: string) {
+  const baseSlug = slugify(name, { lower: true })
+  let slug = baseSlug
+  let count = 1
+
+  while (await categoryRepository.findBySlug(slug)) {
+    slug = `${baseSlug}-${count++}`
+  }
+  return slug
+}
+
 export const categoryService = {
   createCategory: async (name: string, parentId?: number) => {
     if (parentId) {
@@ -43,13 +54,7 @@ export const categoryService = {
       }
     }
 
-    const baseSlug = slugify(name)
-    let slug = baseSlug
-    let count = 1
-
-    while (await categoryRepository.findBySlug(slug)) {
-      slug = `${baseSlug}-${count++}`
-    }
+    const slug = await generateSlug(name)
 
     return categoryRepository.create({ name, slug, parentId })
   },
@@ -64,5 +69,32 @@ export const categoryService = {
     }
 
     return category
+  },
+  updateCategory: async (
+    id: number,
+    data: Pick<Category, 'name' | 'parentId'>
+  ) => {
+    const { name, parentId } = data
+    const category = await categoryRepository.findById(id)
+    if (!category) {
+      throw new AppError('Category not found', StatusCodes.NOT_FOUND)
+    }
+    if (data.parentId && data.parentId === id) {
+      throw new AppError(
+        'Category cannot be its own parent',
+        StatusCodes.BAD_REQUEST
+      )
+    }
+
+    let slug
+    if (data.name && data.name !== category.name) {
+      slug = await generateSlug(data.name)
+    }
+
+    return categoryRepository.update(id, {
+      name,
+      parentId,
+      ...(slug && { slug })
+    })
   }
 }
