@@ -1,15 +1,15 @@
 /**Node modules */
-import { StatusCodes } from 'http-status-codes'
+import { getReasonPhrase, StatusCodes } from 'http-status-codes'
 
 /**Repositories */
 import { variantRepository } from '@/modules/product/variant/variant.repository'
+import { cartRepository } from '@/modules/cart/cart.repository'
 
 /**Api error */
 import { AppError } from '@/errors/AppError'
 
 /**Types */
 import type { T_AddItemInput } from '@/modules/cart/cart.schema'
-import { cartRepository } from '@/modules/cart/cart.repository'
 
 export const cartService = {
   addItem: async (userId: number, input: T_AddItemInput) => {
@@ -68,5 +68,37 @@ export const cartService = {
         }
       }))
     }
+  },
+  updateItem: async (userId: number, itemId: number, quantity: number) => {
+    const item = await cartRepository.findByItemId(itemId)
+    if (!item) {
+      throw new AppError('Cart item not found', StatusCodes.NOT_FOUND)
+    }
+
+    if (item.cart.userId !== userId) {
+      throw new AppError(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      )
+    }
+
+    if (quantity === 0) {
+      await cartRepository.deleteItem(itemId)
+      await cartRepository.updateCartTotal(item.cartId)
+      return {
+        message: 'Item removed'
+      }
+    }
+
+    const variant = item.variant
+    if (!variant || variant.deletedAt) {
+      throw new AppError('Variant not found', StatusCodes.NOT_FOUND)
+    }
+
+    const newTotal = variant.price.mul(quantity)
+    await cartRepository.updateItem(itemId, quantity, newTotal)
+    await cartRepository.updateCartTotal(item.cartId)
+
+    return { message: 'Item updated' }
   }
 }

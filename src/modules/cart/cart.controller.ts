@@ -31,5 +31,22 @@ export const cartController = {
       console.error('Error get cart: ', error)
       next(error)
     }
+  },
+  updateItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const itemId = Number(req.params.itemId)
+      const result = await cartService.updateItem(
+        req.user!.sub,
+        itemId,
+        req.body.quantity
+      )
+      return success(res, {
+        message: 'Update cart item success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error update cart item: ', error)
+      next(error)
+    }
   }
 }

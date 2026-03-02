@@ -94,5 +94,19 @@ export const cartRepository = {
         }
       }
     })
+  },
+  findByItemId: async (id: number) => {
+    return prisma.cartItem.findUnique({
+      where: {
+        id
+      },
+      include: {
+        cart: true,
+        variant: true
+      }
+    })
+  },
+  deleteItem: async (id: number) => {
+    return prisma.cartItem.delete({ where: { id } })
   }
 }

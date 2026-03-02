@@ -9,7 +9,7 @@ import { validate } from '@/middlewares/validate.middleware'
 import { cartController } from '@/modules/cart/cart.controller'
 
 /**Schemas */
-import { addItemSchema } from '@/modules/cart/cart.schema'
+import { addItemSchema, updateCartItemSchema } from '@/modules/cart/cart.schema'
 
 const router = Router()
 
@@ -21,5 +21,11 @@ router.post(
 )
 
 router.get('/', authenticate, cartController.getCart)
+router.patch(
+  '/items/:itemId',
+  authenticate,
+  validate(updateCartItemSchema),
+  cartController.updateItem
+)
 
 export { router as cartRoutes }
