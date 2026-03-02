@@ -28,5 +28,6 @@ router.patch(
   cartController.updateItem
 )
 router.delete('/items/:itemId', authenticate, cartController.deleteItem)
+router.delete('/', authenticate, cartController.clearCart)
 
 export { router as cartRoutes }

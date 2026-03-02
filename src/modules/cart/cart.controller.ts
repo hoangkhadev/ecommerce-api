@@ -60,5 +60,16 @@ export const cartController = {
       console.error('Error delete item from cart: ', error)
       next(error)
     }
+  },
+  clearCart: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await cartService.clearCart(req.user!.sub)
+      return success(res, {
+        message: 'Clear cart success'
+      })
+    } catch (error) {
+      console.error('Error clear cart: ', error)
+      next(error)
+    }
   }
 }

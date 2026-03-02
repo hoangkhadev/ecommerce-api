@@ -108,5 +108,16 @@ export const cartRepository = {
   },
   deleteItem: async (id: number) => {
     return prisma.cartItem.delete({ where: { id } })
+  },
+  clearCart: async (cartId: number) => {
+    await prisma.cartItem.deleteMany({
+      where: { cartId }
+    })
+    return prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        total: 0
+      }
+    })
   }
 }

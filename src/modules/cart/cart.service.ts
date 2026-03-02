@@ -116,5 +116,13 @@ export const cartService = {
 
     await cartRepository.deleteItem(itemId)
     await cartRepository.updateCartTotal(item.cartId)
+  },
+  clearCart: async (userId: number) => {
+    const cart = await cartRepository.findByUserId(userId)
+    if (!cart) {
+      return { message: 'Cart already empty!' }
+    }
+    await cartRepository.clearCart(cart.id)
+    return { message: 'Cart cleared' }
   }
 }
