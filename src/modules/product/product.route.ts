@@ -21,6 +21,7 @@ import { variantRoutes } from '@/modules/product/variant/variant.route'
 
 const router = Router()
 
+router.use('/variants', variantRoutes)
 router.post(
   '/',
   authenticate,
@@ -36,11 +37,16 @@ router.get(
 router.get('/:id', productController.getDetailProduct)
 router.patch(
   '/:id',
+  authenticate,
+  authorize(['ADMIN']),
   validate(updateProductSchema),
   productController.updateProduct
 )
-router.delete('/:id', productController.deleteProduct)
-
-router.use('/variants', variantRoutes)
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['ADMIN']),
+  productController.deleteProduct
+)
 
 export { router as productRoutes }

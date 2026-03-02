@@ -14,5 +14,13 @@ export const variantRepository = {
   },
   update: async (id: number, data: any) => {
     return prisma.productVariant.update({ where: { id }, data })
+  },
+  softDelete: async (id: number) => {
+    return prisma.productVariant.update({
+      where: { id },
+      data: {
+        deletedAt: new Date()
+      }
+    })
   }
 }

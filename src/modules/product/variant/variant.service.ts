@@ -25,5 +25,12 @@ export const variantService = {
       throw new AppError('Variant not found', StatusCodes.NOT_FOUND)
     }
     return variantRepository.update(id, data)
+  },
+  deleteVariant: async (id: number) => {
+    const variant = await variantRepository.findById(id)
+    if (!variant) {
+      throw new AppError('Variant not found', StatusCodes.NOT_FOUND)
+    }
+    await variantRepository.softDelete(id)
   }
 }

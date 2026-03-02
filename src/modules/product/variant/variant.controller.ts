@@ -33,5 +33,17 @@ export const variantController = {
       console.error('Error update product variant: ', error)
       next(error)
     }
+  },
+  deleteVariant: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      await variantService.deleteVariant(id)
+      return success(res, {
+        message: 'Delete product variant success'
+      })
+    } catch (error) {
+      console.error('Error delete product variant: ', error)
+      next(error)
+    }
   }
 }
