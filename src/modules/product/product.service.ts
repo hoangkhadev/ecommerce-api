@@ -22,7 +22,8 @@ export const productService = {
     const existedSku = await productRepository.findSkuExits(skus)
     if (existedSku.length > 0) {
       throw new AppError(
-        `Sku already exists: ${existedSku.map((s) => s.sku).join(', ')}`
+        `Sku already exists: ${existedSku.map((s) => s.sku).join(', ')}`,
+        StatusCodes.BAD_REQUEST
       )
     }
     return productRepository.create(input)
@@ -50,5 +51,12 @@ export const productService = {
         totalPage: Math.ceil(total / limit)
       }
     }
+  },
+  getDetailProduct: async (id: number) => {
+    const product = await productRepository.findById(id)
+    if (!product) {
+      throw new AppError('Product not found', StatusCodes.NOT_FOUND)
+    }
+    return product
   }
 }

@@ -35,5 +35,18 @@ export const productController = {
       console.error('Error get all product: ', error)
       next(error)
     }
+  },
+  getDetailProduct: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const product = await productService.getDetailProduct(id)
+      return success(res, {
+        message: 'Get product success',
+        data: product
+      })
+    } catch (error) {
+      console.error('Error get detail product: ', error)
+      next(error)
+    }
   }
 }

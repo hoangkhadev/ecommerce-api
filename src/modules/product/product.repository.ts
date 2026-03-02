@@ -67,5 +67,17 @@ export const productRepository = {
         categoryId: query.categoryId || undefined
       }
     })
+  },
+  findById: async (id: number) => {
+    return prisma.product.findFirst({
+      where: { id, deletedAt: null, isActive: true },
+      include: {
+        category: true,
+        variants: {
+          where: { deletedAt: null },
+          include: { images: true }
+        }
+      }
+    })
   }
 }

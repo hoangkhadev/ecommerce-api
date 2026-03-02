@@ -29,5 +29,6 @@ router.get(
   validate(queryProductSchema, 'query'),
   productController.getAllProduct
 )
+router.get('/:id', productController.getDetailProduct)
 
 export { router as productRoutes }
