@@ -16,6 +16,9 @@ import {
   updateProductSchema
 } from '@/modules/product/product.schema'
 
+/**Routes */
+import { variantRoutes } from '@/modules/product/variant/variant.route'
+
 const router = Router()
 
 router.post(
@@ -37,5 +40,7 @@ router.patch(
   productController.updateProduct
 )
 router.delete('/:id', productController.deleteProduct)
+
+router.use('/variants', variantRoutes)
 
 export { router as productRoutes }
