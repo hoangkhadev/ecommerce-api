@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**Custom modules */
 import { prisma } from '@/lib/prisma'
 
@@ -10,5 +11,8 @@ export const variantRepository = {
         images: true
       }
     })
+  },
+  update: async (id: number, data: any) => {
+    return prisma.productVariant.update({ where: { id }, data })
   }
 }

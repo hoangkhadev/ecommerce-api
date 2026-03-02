@@ -20,5 +20,18 @@ export const variantController = {
       console.error('Error get product variant: ', error)
       next(error)
     }
+  },
+  updateVariant: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const variant = await variantService.updateVariant(id, req.body)
+      return success(res, {
+        message: 'Update product variant success',
+        data: variant
+      })
+    } catch (error) {
+      console.error('Error update product variant: ', error)
+      next(error)
+    }
   }
 }
