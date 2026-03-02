@@ -100,5 +100,21 @@ export const cartService = {
     await cartRepository.updateCartTotal(item.cartId)
 
     return { message: 'Item updated' }
+  },
+  deleteItem: async (itemId: number, userId: number) => {
+    const item = await cartRepository.findByItemId(itemId)
+    if (!item) {
+      throw new AppError('Item not found', StatusCodes.NOT_FOUND)
+    }
+
+    if (item.cart.userId !== userId) {
+      throw new AppError(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      )
+    }
+
+    await cartRepository.deleteItem(itemId)
+    await cartRepository.updateCartTotal(item.cartId)
   }
 }

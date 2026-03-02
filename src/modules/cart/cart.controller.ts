@@ -48,5 +48,17 @@ export const cartController = {
       console.error('Error update cart item: ', error)
       next(error)
     }
+  },
+  deleteItem: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const itemId = Number(req.params.itemId)
+      await cartService.deleteItem(itemId, req.user!.sub)
+      return success(res, {
+        message: 'Delete item from cart success'
+      })
+    } catch (error) {
+      console.error('Error delete item from cart: ', error)
+      next(error)
+    }
   }
 }
