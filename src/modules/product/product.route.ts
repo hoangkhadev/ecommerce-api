@@ -10,7 +10,10 @@ import { authorize } from '@/middlewares/authorize.middleware'
 import { productController } from '@/modules/product/product.controller'
 
 /**Schemas */
-import { createProductSchema } from '@/modules/product/product.schema'
+import {
+  createProductSchema,
+  queryProductSchema
+} from '@/modules/product/product.schema'
 
 const router = Router()
 
@@ -20,6 +23,11 @@ router.post(
   authorize(['ADMIN']),
   validate(createProductSchema),
   productController.createProduct
+)
+router.get(
+  '/',
+  validate(queryProductSchema, 'query'),
+  productController.getAllProduct
 )
 
 export { router as productRoutes }

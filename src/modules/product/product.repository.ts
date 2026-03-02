@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**Custom modules */
 import { prisma } from '@/lib/prisma'
 import { T_CreateProductInput } from '@/modules/product/product.schema'
@@ -11,7 +12,6 @@ export const productRepository = {
         categoryId: data.categoryId,
 
         variants: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           create: data.variants.map((variant: any) => ({
             sku: variant.sku,
             price: variant.price,
@@ -33,6 +33,39 @@ export const productRepository = {
         sku: { in: skus }
       },
       select: { sku: true }
+    })
+  },
+  findMany: async (query: any) => {
+    const { skip, take, search, categoryId } = query
+    return prisma.product.findMany({
+      where: {
+        deletedAt: null,
+        isActive: true,
+        name: search ? { contains: search, mode: 'insensitive' } : undefined,
+        categoryId: categoryId || undefined
+      },
+      skip,
+      take,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        variants: {
+          where: { deletedAt: null },
+          include: {
+            images: true
+          }
+        }
+      }
+    })
+  },
+  count: async (query: any) => {
+    return prisma.product.count({
+      where: {
+        deletedAt: null,
+        isActive: true,
+        categoryId: query.categoryId || undefined
+      }
     })
   }
 }

@@ -23,5 +23,17 @@ export const productController = {
       console.error('Error create product: ', error)
       next(error)
     }
+  },
+  getAllProduct: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await productService.getAllProduct(req.validatedQuery)
+      return success(res, {
+        message: 'Get all product success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get all product: ', error)
+      next(error)
+    }
   }
 }
