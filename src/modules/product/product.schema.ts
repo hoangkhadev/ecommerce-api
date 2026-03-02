@@ -1,9 +1,6 @@
 /**Node modules */
 import * as z from 'zod'
 
-// const preprocessEmpty = <T extends z.ZodTypeAny>(schema: T) =>
-//   z.preprocess((v) => (v === '' ? undefined : v), schema)
-
 export const createProductSchema = z.object({
   name: z.string().min(3).max(120),
   description: z.string().optional(),
@@ -32,6 +29,13 @@ export const queryProductSchema = z.object({
   search: z.string().optional(),
   categoryId: z.coerce.number().optional()
 })
+export const updateProductSchema = z.object({
+  name: z.string().min(1).max(120).optional(),
+  description: z.string().optional(),
+  categoryId: z.number().optional(),
+  isActive: z.boolean().optional()
+})
 
 export type T_CreateProductInput = z.infer<typeof createProductSchema>
 export type T_QueryProductInput = z.infer<typeof queryProductSchema>
+export type T_UpdateProductInput = z.infer<typeof updateProductSchema>

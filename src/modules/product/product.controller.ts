@@ -48,5 +48,18 @@ export const productController = {
       console.error('Error get detail product: ', error)
       next(error)
     }
+  },
+  updateProduct: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const product = await productService.updateProduct(id, req.body)
+      return success(res, {
+        message: 'Update product success',
+        data: product
+      })
+    } catch (error) {
+      console.error('Error update product: ', error)
+      next(error)
+    }
   }
 }

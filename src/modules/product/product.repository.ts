@@ -79,5 +79,20 @@ export const productRepository = {
         }
       }
     })
+  },
+  findByIdUpdate: async (id: number) => {
+    return prisma.product.findFirst({
+      where: { id, deletedAt: null },
+      include: {
+        category: true,
+        variants: {
+          where: { deletedAt: null },
+          include: { images: true }
+        }
+      }
+    })
+  },
+  update: async (id: number, data: any) => {
+    return prisma.product.update({ where: { id }, data })
   }
 }

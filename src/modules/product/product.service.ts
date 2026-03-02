@@ -10,7 +10,10 @@ import { categoryRepository } from '@/modules/category/category.repository'
 import { productRepository } from '@/modules/product/product.repository'
 
 /**Types */
-import type { T_CreateProductInput } from '@/modules/product/product.schema'
+import type {
+  T_CreateProductInput,
+  T_UpdateProductInput
+} from '@/modules/product/product.schema'
 
 export const productService = {
   createProduct: async (input: T_CreateProductInput) => {
@@ -58,5 +61,20 @@ export const productService = {
       throw new AppError('Product not found', StatusCodes.NOT_FOUND)
     }
     return product
+  },
+  updateProduct: async (id: number, data: T_UpdateProductInput) => {
+    const product = await productRepository.findByIdUpdate(id)
+    if (!product) {
+      throw new AppError('Product not found', StatusCodes.NOT_FOUND)
+    }
+
+    if (data.categoryId) {
+      const category = await categoryRepository.findById(data.categoryId)
+      if (!category) {
+        throw new AppError('Category not found', StatusCodes.NOT_FOUND)
+      }
+    }
+
+    return productRepository.update(id, data)
   }
 }

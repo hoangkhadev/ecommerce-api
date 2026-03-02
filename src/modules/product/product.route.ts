@@ -12,7 +12,8 @@ import { productController } from '@/modules/product/product.controller'
 /**Schemas */
 import {
   createProductSchema,
-  queryProductSchema
+  queryProductSchema,
+  updateProductSchema
 } from '@/modules/product/product.schema'
 
 const router = Router()
@@ -30,5 +31,10 @@ router.get(
   productController.getAllProduct
 )
 router.get('/:id', productController.getDetailProduct)
+router.patch(
+  '/:id',
+  validate(updateProductSchema),
+  productController.updateProduct
+)
 
 export { router as productRoutes }
