@@ -54,5 +54,45 @@ export const cartRepository = {
         total: result._sum.total || 0
       }
     })
+  },
+  findCartDetail: async (userId: number) => {
+    return prisma.cart.findUnique({
+      where: { userId },
+
+      include: {
+        cartItems: {
+          where: {
+            variant: {
+              deletedAt: null,
+              product: {
+                deletedAt: null,
+                isActive: true
+              }
+            }
+          },
+          include: {
+            variant: {
+              include: {
+                product: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                images: {
+                  where: {
+                    isPrimary: true
+                  },
+                  select: {
+                    imageUrl: true
+                  },
+                  take: 1
+                }
+              }
+            }
+          }
+        }
+      }
+    })
   }
 }

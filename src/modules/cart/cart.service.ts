@@ -45,5 +45,28 @@ export const cartService = {
 
     const result = await cartRepository.updateCartTotal(cart.id)
     return result
+  },
+  getCart: async (userId: number) => {
+    const cart = await cartRepository.findCartDetail(userId)
+    if (!cart) {
+      return { total: 0, items: [] }
+    }
+
+    return {
+      id: cart.id,
+      total: cart.total,
+      items: cart.cartItems.map((item) => ({
+        id: item.id,
+        total: item.total,
+        quantity: item.quantity,
+        variant: {
+          id: item.variant.id,
+          sku: item.variant.sku,
+          price: item.variant.price,
+          product: item.variant.product,
+          image: item.variant.images[0]?.imageUrl || null
+        }
+      }))
+    }
   }
 }

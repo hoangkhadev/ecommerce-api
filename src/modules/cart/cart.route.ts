@@ -20,4 +20,6 @@ router.post(
   cartController.addItem
 )
 
+router.get('/', authenticate, cartController.getCart)
+
 export { router as cartRoutes }

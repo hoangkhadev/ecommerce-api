@@ -19,5 +19,17 @@ export const cartController = {
       console.error('Error add item to cart: ', error)
       next(error)
     }
+  },
+  getCart: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await cartService.getCart(req.user!.sub)
+      return success(res, {
+        message: 'Get cart success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get cart: ', error)
+      next(error)
+    }
   }
 }
