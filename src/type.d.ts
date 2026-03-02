@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare namespace Express {
   interface Request {
     refreshToken?: string
@@ -5,5 +6,6 @@ declare namespace Express {
       sub: number
       role: string
     }
+    validatedQuery?: any
   }
 }

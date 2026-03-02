@@ -19,7 +19,11 @@ export const validate =
       })
     }
 
-    req[key] = result.data
+    if (key === 'query') {
+      req.validatedQuery = result.data
+    } else {
+      req[key] = result.data
+    }
 
     next()
   }
