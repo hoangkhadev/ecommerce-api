@@ -61,5 +61,17 @@ export const productController = {
       console.error('Error update product: ', error)
       next(error)
     }
+  },
+  deleteProduct: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      await productService.deleteProduct(id)
+      return success(res, {
+        message: 'Delete product success'
+      })
+    } catch (error) {
+      console.error('Error delete product: ', error)
+      next(error)
+    }
   }
 }

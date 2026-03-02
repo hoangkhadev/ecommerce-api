@@ -36,5 +36,6 @@ router.patch(
   validate(updateProductSchema),
   productController.updateProduct
 )
+router.delete('/:id', productController.deleteProduct)
 
 export { router as productRoutes }

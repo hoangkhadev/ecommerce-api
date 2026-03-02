@@ -76,5 +76,12 @@ export const productService = {
     }
 
     return productRepository.update(id, data)
+  },
+  deleteProduct: async (id: number) => {
+    const product = await productRepository.findById(id)
+    if (!product) {
+      throw new AppError('Product not found', StatusCodes.NOT_FOUND)
+    }
+    await productRepository.softDelete(id)
   }
 }

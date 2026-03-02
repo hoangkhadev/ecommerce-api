@@ -94,5 +94,13 @@ export const productRepository = {
   },
   update: async (id: number, data: any) => {
     return prisma.product.update({ where: { id }, data })
+  },
+  softDelete: async (id: number) => {
+    return prisma.product.update({
+      where: { id },
+      data: {
+        deletedAt: new Date()
+      }
+    })
   }
 }
