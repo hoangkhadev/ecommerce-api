@@ -8,6 +8,7 @@ import { authorize } from '@/middlewares/authorize.middleware'
 
 /**Controller */
 import { productController } from '@/modules/product/product.controller'
+import { variantController } from '@/modules/product/variant/variant.controller'
 
 /**Schemas */
 import {
@@ -16,8 +17,20 @@ import {
   updateProductSchema
 } from '@/modules/product/product.schema'
 
+/**Routes */
+import { variantRoutes } from '@/modules/product/variant/variant.route'
+import { createVariantSchema } from '@/modules/product/variant/variant.schema'
+
 const router = Router()
 
+router.post(
+  '/:id/variants',
+  authenticate,
+  authorize(['ADMIN']),
+  validate(createVariantSchema),
+  variantController.createVariant
+)
+router.use('/variants', variantRoutes)
 router.post(
   '/',
   authenticate,
@@ -33,9 +46,16 @@ router.get(
 router.get('/:id', productController.getDetailProduct)
 router.patch(
   '/:id',
+  authenticate,
+  authorize(['ADMIN']),
   validate(updateProductSchema),
   productController.updateProduct
 )
-router.delete('/:id', productController.deleteProduct)
+router.delete(
+  '/:id',
+  authenticate,
+  authorize(['ADMIN']),
+  productController.deleteProduct
+)
 
 export { router as productRoutes }
