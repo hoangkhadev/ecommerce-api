@@ -22,5 +22,22 @@ export const variantRepository = {
         deletedAt: new Date()
       }
     })
+  },
+  create: async (productId: number, data: any) => {
+    return prisma.productVariant.create({
+      data: {
+        productId,
+        sku: data.sku,
+        stock: data.stock,
+        price: data.price,
+        images: data.images ? { create: data.images } : undefined
+      },
+      include: {
+        images: true
+      }
+    })
+  },
+  findSku: async (sku: string) => {
+    return prisma.productVariant.findUnique({ where: { sku } })
   }
 }
