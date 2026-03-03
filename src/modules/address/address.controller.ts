@@ -65,5 +65,17 @@ export const addressController = {
       console.error('Error update address', error)
       next(error)
     }
+  },
+  deleteAddress: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      await addressService.deleteAddress(req.user!.sub, id)
+      return success(res, {
+        message: 'Delete address success'
+      })
+    } catch (error) {
+      console.error('Error delete address', error)
+      next(error)
+    }
   }
 }

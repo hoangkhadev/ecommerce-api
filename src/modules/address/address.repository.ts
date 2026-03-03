@@ -29,5 +29,16 @@ export const addressRepository = {
       where: { id },
       data
     })
+  },
+  delete: async (id: number) => {
+    return prisma.address.delete({
+      where: { id }
+    })
+  },
+  findFirstByUserId: async (userId: number) => {
+    return prisma.address.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'asc' }
+    })
   }
 }

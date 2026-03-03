@@ -48,5 +48,19 @@ export const addressService = {
     }
 
     return addressRepository.update(id, input)
+  },
+  deleteAddress: async (userId: number, id: number) => {
+    const address = await addressRepository.findById(id, userId)
+    if (!address) {
+      throw new AppError('Address not found', StatusCodes.NOT_FOUND)
+    }
+
+    await addressRepository.delete(id)
+    if (address.isDefault) {
+      const another = await addressRepository.findFirstByUserId(userId)
+      if (another) {
+        await addressRepository.update(another.id, { isDefault: true })
+      }
+    }
   }
 }

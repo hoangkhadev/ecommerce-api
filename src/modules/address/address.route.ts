@@ -25,5 +25,6 @@ router.patch(
   validate(updateAddressSchema),
   addressController.updateAddress
 )
+router.delete('/:id', addressController.deleteAddress)
 
 export { router as addressRoutes }
