@@ -8,7 +8,10 @@ import { addressRepository } from '@/modules/address/address.repository'
 import { AppError } from '@/errors/AppError'
 
 /**Types */
-import type { T_CreateAddressInput } from '@/modules/address/address.schema'
+import type {
+  T_CreateAddressInput,
+  T_UpdateAddressInput
+} from '@/modules/address/address.schema'
 
 export const addressService = {
   createAddress: async (userId: number, input: T_CreateAddressInput) => {
@@ -29,5 +32,21 @@ export const addressService = {
     }
 
     return address
+  },
+  updateAddress: async (
+    userId: number,
+    id: number,
+    input: T_UpdateAddressInput
+  ) => {
+    const address = await addressRepository.findById(id, userId)
+    if (!address) {
+      throw new AppError('Address not found', StatusCodes.NOT_FOUND)
+    }
+
+    if (input.isDefault === true) {
+      await addressRepository.updateIsDefaultToFalseByUserId(userId)
+    }
+
+    return addressRepository.update(id, input)
   }
 }

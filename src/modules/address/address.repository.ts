@@ -17,5 +17,17 @@ export const addressRepository = {
   },
   findById: async (id: number, userId: number) => {
     return prisma.address.findFirst({ where: { id, userId } })
+  },
+  updateIsDefaultToFalseByUserId: async (userId: number) => {
+    return prisma.address.updateMany({
+      where: { userId },
+      data: { isDefault: false }
+    })
+  },
+  update: async (id: number, data: any) => {
+    return prisma.address.update({
+      where: { id },
+      data
+    })
   }
 }

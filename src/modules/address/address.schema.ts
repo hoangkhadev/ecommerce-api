@@ -10,5 +10,7 @@ export const createAddressSchema = z.object({
   detail: z.string(),
   isDefault: z.boolean().optional()
 })
+export const updateAddressSchema = createAddressSchema.partial()
 
 export type T_CreateAddressInput = z.infer<typeof createAddressSchema>
+export type T_UpdateAddressInput = z.infer<typeof updateAddressSchema>
