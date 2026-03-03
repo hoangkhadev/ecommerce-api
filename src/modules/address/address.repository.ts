@@ -12,7 +12,7 @@ export const addressRepository = {
   findByUserId: async (userId: number) => {
     return prisma.address.findMany({
       where: { userId },
-      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }]
+      orderBy: [{ createdAt: 'desc' }]
     })
   },
   findById: async (id: number, userId: number) => {

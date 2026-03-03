@@ -77,5 +77,18 @@ export const addressController = {
       console.error('Error delete address', error)
       next(error)
     }
+  },
+  setDefault: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const result = await addressService.setDefault(req.user!.sub, id)
+      return success(res, {
+        message: 'Set default address success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error set default address', error)
+      next(error)
+    }
   }
 }

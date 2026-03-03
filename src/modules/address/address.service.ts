@@ -62,5 +62,15 @@ export const addressService = {
         await addressRepository.update(another.id, { isDefault: true })
       }
     }
+  },
+  setDefault: async (userId: number, id: number) => {
+    const address = await addressRepository.findById(id, userId)
+    if (!address) {
+      throw new AppError('Address not found', StatusCodes.NOT_FOUND)
+    }
+
+    await addressRepository.updateIsDefaultToFalseByUserId(userId)
+    const result = await addressRepository.update(id, { isDefault: true })
+    return result
   }
 }

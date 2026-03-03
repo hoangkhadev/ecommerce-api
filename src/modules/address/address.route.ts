@@ -26,5 +26,6 @@ router.patch(
   addressController.updateAddress
 )
 router.delete('/:id', addressController.deleteAddress)
+router.patch('/:id/default', addressController.setDefault)
 
 export { router as addressRoutes }
