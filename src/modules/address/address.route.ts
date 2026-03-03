@@ -16,5 +16,6 @@ const router = Router()
 router.use(authenticate)
 router.post('/', validate(createAddressSchema), addressController.createAddress)
 router.get('/', addressController.getMyAddresses)
+router.get('/:id', addressController.getDetail)
 
 export { router as addressRoutes }

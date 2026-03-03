@@ -14,5 +14,8 @@ export const addressRepository = {
       where: { userId },
       orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }]
     })
+  },
+  findById: async (id: number, userId: number) => {
+    return prisma.address.findFirst({ where: { id, userId } })
   }
 }

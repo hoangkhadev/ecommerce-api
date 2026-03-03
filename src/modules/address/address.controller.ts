@@ -35,5 +35,18 @@ export const addressController = {
       console.error('Error get address', error)
       next(error)
     }
+  },
+  getDetail: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const result = await addressService.getDetail(id, req.user!.sub)
+      return success(res, {
+        message: 'Get detail address success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get detail address', error)
+      next(error)
+    }
   }
 }
