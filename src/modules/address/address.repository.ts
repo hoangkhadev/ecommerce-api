@@ -8,5 +8,11 @@ export const addressRepository = {
   },
   countAdressByUserId: async (userId: number) => {
     return prisma.address.count({ where: { userId } })
+  },
+  findByUserId: async (userId: number) => {
+    return prisma.address.findMany({
+      where: { userId },
+      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }]
+    })
   }
 }

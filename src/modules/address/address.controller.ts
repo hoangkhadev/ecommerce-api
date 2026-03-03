@@ -23,5 +23,17 @@ export const addressController = {
       console.error('Error create address', error)
       next(error)
     }
+  },
+  getMyAddresses: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await addressService.getMyAddresses(req.user!.sub)
+      return success(res, {
+        message: 'Get address success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get address', error)
+      next(error)
+    }
   }
 }

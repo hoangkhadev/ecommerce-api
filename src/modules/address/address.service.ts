@@ -12,5 +12,8 @@ export const addressService = {
       ...input,
       isDefault: count === 0 ? true : (input.isDefault ?? false)
     })
+  },
+  getMyAddresses: async (userId: number) => {
+    return addressRepository.findByUserId(userId)
   }
 }
