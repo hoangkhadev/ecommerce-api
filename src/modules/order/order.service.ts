@@ -92,5 +92,36 @@ export const orderService = {
     }
 
     return order
+  },
+  cancelOrder: async (orderId: number, userId: number) => {
+    return prisma.$transaction(async (tx) => {
+      const order = await tx.order.findFirst({
+        where: { id: orderId, userId },
+        include: {
+          orderItems: true
+        }
+      })
+      if (!order) {
+        throw new AppError('Order not found', StatusCodes.NOT_FOUND)
+      }
+
+      if (!['PENDING', 'APPROVED'].includes(order.status)) {
+        throw new AppError('Order cannot be canceled', StatusCodes.BAD_REQUEST)
+      }
+
+      for (const item of order.orderItems) {
+        await tx.productVariant.update({
+          where: { id: item.productVariantId },
+          data: {
+            stock: { increment: item.quantity }
+          }
+        })
+      }
+
+      return tx.order.update({
+        where: { id: orderId },
+        data: { status: 'CANCELED' }
+      })
+    })
   }
 }

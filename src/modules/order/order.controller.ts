@@ -51,5 +51,18 @@ export const orderController = {
       console.error('Error get order detail: ', error)
       next(error)
     }
+  },
+  cancelOrder: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const result = await orderService.cancelOrder(id, req.user!.sub)
+      return success(res, {
+        message: 'Cancel order success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error cancel order: ', error)
+      next(error)
+    }
   }
 }

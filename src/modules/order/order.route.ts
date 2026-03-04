@@ -17,4 +17,6 @@ router.use(authenticate)
 router.post('/', validate(createOrderSchema), orderController.createOrder)
 router.get('/my-orders', orderController.getUserOrders)
 router.get('/:id', orderController.getOrderDetail)
+router.patch('/:id/cancel', orderController.cancelOrder)
+
 export { router as orderRoutes }
