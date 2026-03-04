@@ -7,6 +7,9 @@ import { prisma } from '@/lib/prisma'
 /**Api error */
 import { AppError } from '@/errors/AppError'
 
+/**Repositories */
+import { orderRepository } from '@/modules/order/order.repository'
+
 export const orderService = {
   createOrder: async (userId: number, addressId: number) => {
     return prisma.$transaction(async (tx) => {
@@ -78,5 +81,8 @@ export const orderService = {
 
       return order
     })
+  },
+  getUserOrders: async (userId: number) => {
+    return orderRepository.findByUserId(userId)
   }
 }

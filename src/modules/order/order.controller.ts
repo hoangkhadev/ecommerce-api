@@ -26,5 +26,18 @@ export const orderController = {
       console.error('Error create order: ', error)
       next(error)
     }
+  },
+  getUserOrders: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await orderService.getUserOrders(req.user!.sub)
+      return success(res, {
+        message: 'Get user orders success',
+        statusCode: StatusCodes.CREATED,
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get user orders: ', error)
+      next(error)
+    }
   }
 }

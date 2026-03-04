@@ -15,5 +15,6 @@ const router = Router()
 
 router.use(authenticate)
 router.post('/', validate(createOrderSchema), orderController.createOrder)
+router.get('/my-orders', orderController.getUserOrders)
 
 export { router as orderRoutes }
