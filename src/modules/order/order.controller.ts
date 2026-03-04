@@ -32,11 +32,23 @@ export const orderController = {
       const result = await orderService.getUserOrders(req.user!.sub)
       return success(res, {
         message: 'Get user orders success',
-        statusCode: StatusCodes.CREATED,
         data: result
       })
     } catch (error) {
       console.error('Error get user orders: ', error)
+      next(error)
+    }
+  },
+  getOrderDetail: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id)
+      const result = await orderService.getOrderDetail(req.user!.sub, id)
+      return success(res, {
+        message: 'Get order detail success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error get order detail: ', error)
       next(error)
     }
   }

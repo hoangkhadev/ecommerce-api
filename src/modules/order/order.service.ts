@@ -84,5 +84,13 @@ export const orderService = {
   },
   getUserOrders: async (userId: number) => {
     return orderRepository.findByUserId(userId)
+  },
+  getOrderDetail: async (userId: number, id: number) => {
+    const order = await orderRepository.findDetail(id, userId)
+    if (!order) {
+      throw new AppError('Order not found', StatusCodes.NOT_FOUND)
+    }
+
+    return order
   }
 }
