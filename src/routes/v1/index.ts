@@ -8,6 +8,7 @@ import { categoryRoutes } from '@/modules/category/category.route'
 import { productRoutes } from '@/modules/product/product.route'
 import { cartRoutes } from '@/modules/cart/cart.route'
 import { addressRoutes } from '@/modules/address/address.route'
+import { orderRoutes } from '@/modules/order/order.route'
 
 const router = Router()
 
@@ -17,5 +18,6 @@ router.use('/categories', categoryRoutes)
 router.use('/products', productRoutes)
 router.use('/cart', cartRoutes)
 router.use('/addresses', addressRoutes)
+router.use('/orders', orderRoutes)
 
 export { router as v1Routes }
