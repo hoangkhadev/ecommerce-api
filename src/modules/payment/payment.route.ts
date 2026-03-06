@@ -24,5 +24,6 @@ router.post(
   validate(createPaymentSchema),
   paymentController.createVNPayPayment
 )
+router.get('/vnpay/return', paymentController.getVNPayPaymentReturn)
 
 export { router as paymentRoutes }

@@ -41,5 +41,21 @@ export const paymentController = {
       console.error('Error create payment: ', error)
       next(error)
     }
+  },
+  getVNPayPaymentReturn: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const result = await paymentService.getVNPayPaymentReturn(req.query)
+      return success(res, {
+        message: 'Get VNPay payment return success',
+        data: result
+      })
+    } catch (error) {
+      console.error('Error create payment: ', error)
+      next(error)
+    }
   }
 }
