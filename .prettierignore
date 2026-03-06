@@ -14,3 +14,5 @@ build
 .vscode
 
 *.yaml
+
+postman_collection.json
