@@ -32,17 +32,22 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+app.get('/', (req, res) => {
+  res.json({
+    name: 'E-commerce API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      api: '/api/v1'
+    }
+  })
+})
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
-  })
-})
-app.get('/api', (_req, res) => {
-  res.json({
-    name: 'Moda Ecommerce API',
-    version: '1.0.0'
   })
 })
 
