@@ -10,7 +10,8 @@ const jestConfig: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
-  clearMocks: true
+  clearMocks: true,
+  testPathIgnorePatterns: ['/node_modules/', '/dist/']
 }
 
 export default jestConfig
