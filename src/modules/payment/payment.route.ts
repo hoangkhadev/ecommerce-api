@@ -15,9 +15,14 @@ const router = Router()
 
 router.use(authenticate)
 router.post(
-  '/cod',
+  '/cod/create',
   validate(createPaymentSchema),
   paymentController.createCODPayment
+)
+router.post(
+  '/vnpay/create',
+  validate(createPaymentSchema),
+  paymentController.createVNPayPayment
 )
 
 export { router as paymentRoutes }

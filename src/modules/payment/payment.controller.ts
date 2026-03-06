@@ -19,5 +19,27 @@ export const paymentController = {
       console.error('Error create payment: ', error)
       next(error)
     }
+  },
+  createVNPayPayment: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const ip = req.ip || '127.0.0.1'
+
+      const paymentUrl = await paymentService.createVNPayPayment(
+        req.user!.sub,
+        req.body.orderId,
+        ip
+      )
+      return success(res, {
+        message: 'Create payment success',
+        data: { paymentUrl }
+      })
+    } catch (error) {
+      console.error('Error create payment: ', error)
+      next(error)
+    }
   }
 }
