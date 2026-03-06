@@ -3,7 +3,7 @@ import { prisma } from '../src/lib/prisma'
 
 async function main() {
   const salt = await bcrypt.genSalt(10)
-  const password = await bcrypt.hash('123456', salt)
+  const password = await bcrypt.hash('12345678', salt)
 
   await prisma.user.upsert({
     where: { email: 'admin@admin.com' },
