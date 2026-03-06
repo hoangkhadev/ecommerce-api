@@ -25,7 +25,10 @@ export const generateRefreshToken = (payload: T_JwtPayload) => {
 
 export const verifyRefreshToken = (refreshToken: string) => {
   try {
-    return jwt.verify(refreshToken, env.JWT_REFRESH_SECRET!)
+    return jwt.verify(
+      refreshToken,
+      env.JWT_REFRESH_SECRET!
+    ) as unknown as T_JwtPayload
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new AppError('Refresh token expired', StatusCodes.UNAUTHORIZED)
